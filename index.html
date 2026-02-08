@@ -16,11 +16,13 @@
         
         ::selection { background-color: rgba(112, 48, 208, 0.4); color: white; }
         
+        /* Animasyonlar */
         @keyframes scroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .animate-marquee { display: flex; animation: scroll 40s linear infinite; width: max-content; }
         
-        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        .glass-hover:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(112, 48, 208, 0.3); }
+        /* Glassmorphism & Effects */
+        .glass { background: rgba(255, 255, 255, 0.02); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        .glass-hover:hover { background: rgba(255, 255, 255, 0.05); border-color: rgba(112, 48, 208, 0.4); box-shadow: 0 0 30px rgba(112, 48, 208, 0.1); }
         
         .mui-gradient-text {
             background: linear-gradient(135deg, var(--mui-purple), #a855f7, var(--mui-green));
@@ -32,14 +34,14 @@
 
         @keyframes gradient-flow { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #050508; }
         ::-webkit-scrollbar-thumb { background: var(--mui-purple); border-radius: 10px; }
         
         #bg-glow {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at center, rgba(112, 48, 208, 0.1) 0%, transparent 50%);
-            pointer-events: none; z-index: 0; transition: background 0.2s cubic-bezier(0.23, 1, 0.32, 1);
+            background: radial-gradient(circle at center, rgba(112, 48, 208, 0.08) 0%, transparent 50%);
+            pointer-events: none; z-index: 0; transition: background 0.3s ease;
         }
 
         .chat-bubble-bot { border-top-left-radius: 0; }
@@ -52,158 +54,201 @@
 
         .pt-safe { padding-top: env(safe-area-inset-top); }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-        
-        @media (max-width: 1024px) {
-            #bg-glow { background: radial-gradient(circle at 50% 30%, rgba(112, 48, 208, 0.15) 0%, transparent 60%) !important; }
+
+        .view-transition { animation: fadeUp 0.8s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Başlık Ölçeklendirmesi - Çok büyük olmaması için optimize edildi */
+        .hero-title {
+            font-size: clamp(2.5rem, 8vw, 7.5rem);
+            line-height: 1.1;
+            letter-spacing: -0.04em;
         }
 
-        .view-transition { animation: fadeUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        /* Fütüristik Kart Efekti */
+        .futuristic-card {
+            position: relative;
+            background: rgba(10, 10, 15, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+        .futuristic-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--mui-green), transparent);
+            animation: move-light 3s linear infinite;
+        }
+        @keyframes move-light { 0% { left: -100%; } 100% { left: 100%; } }
     </style>
 </head>
 <body class="antialiased">
     <div id="bg-glow"></div>
 
-    <!-- Navigation Bar -->
-    <nav id="navbar" class="fixed top-0 w-full z-[110] transition-all duration-500 py-4 md:py-8 pt-safe">
-        <div class="max-w-[1600px] mx-auto px-5 md:px-10 flex justify-between items-center">
-            <div class="flex items-center gap-2 md:gap-4 cursor-pointer relative z-[120]" onclick="handleNavigation('home')">
-                <svg viewBox="0 0 100 80" fill="none" class="w-8 h-8 md:w-12 md:h-12 drop-shadow-lg">
-                    <path d="M20 70V35C20 23.9543 28.9543 15 40 15V15C51.0457 15 60 23.9543 60 35V70" stroke="#7030D0" stroke-width="15" stroke-linecap="round"/>
-                    <path d="M60 70V55C60 43.9543 68.9543 35 80 35H80" stroke="#7030D0" stroke-width="15" stroke-linecap="round"/>
-                    <circle cx="90" cy="65" r="10" fill="#30D67D" />
+    <!-- Navigasyon Çubuğu -->
+    <nav id="navbar" class="fixed top-0 w-full z-[110] transition-all duration-500 py-6 md:py-10 pt-safe">
+        <div class="max-w-[1400px] mx-auto px-6 md:px-12 flex justify-between items-center">
+            <!-- Logo Alanı -->
+            <div class="flex items-center gap-3 md:gap-4 cursor-pointer relative z-[120]" onclick="handleNavigation('home')">
+                <svg viewBox="0 0 120 100" fill="none" class="w-10 h-10 md:w-14 md:h-14">
+                    <path d="M15 75V40C15 28.9543 23.9543 20 35 20V20C46.0457 20 55 28.9543 55 40V75" stroke="#7030D0" stroke-width="14" stroke-linecap="round"/>
+                    <path d="M55 75V55C55 43.9543 63.9543 35 75 35H75" stroke="#7030D0" stroke-width="14" stroke-linecap="round"/>
+                    <circle cx="95" cy="70" r="12" fill="#30D67D" />
                 </svg>
-                <span class="font-black text-lg md:text-2xl tracking-tighter uppercase">MUI MEDYA</span>
+                <span class="font-black text-xl md:text-2xl tracking-tighter uppercase">MUI MEDYA</span>
             </div>
             
-            <div class="hidden xl:flex gap-12 text-[11px] font-black uppercase tracking-[0.3em] text-white/40">
-                <button onclick="handleNavigation('home')" class="hover:text-white transition-all">ANA SAYFA</button>
-                <button onclick="handleScrollTo('services')" class="hover:text-white transition-all">HİZMETLER</button>
-                <button onclick="handleNavigation('blog')" class="hover:text-white transition-all">BLOG</button>
+            <!-- Masaüstü Navigasyon (Burger Menü Masaüstünde Yok) -->
+            <div class="hidden lg:flex items-center gap-10 text-[11px] font-black uppercase tracking-[0.3em] text-white/40">
+                <button onclick="handleNavigation('home')" class="hover:text-[#30D67D] transition-all">ANA SAYFA</button>
+                <button onclick="handleScrollTo('services')" class="hover:text-[#30D67D] transition-all">HİZMETLER</button>
+                <button onclick="handleNavigation('blog')" class="hover:text-[#30D67D] transition-all">BLOG</button>
                 <button onclick="handleScrollTo('contact')" class="hover:text-white transition-all text-[#7030D0]">İLETİŞİM</button>
-            </div>
-
-            <div class="flex items-center gap-3 md:gap-6">
-                <a href="https://wa.me/905322426012" target="_blank" onclick="interactionFeedback()" class="hidden sm:flex bg-[#7030D0] hover:bg-[#30D67D] text-white px-8 py-3.5 rounded-2xl text-xs font-black transition-all hover:scale-105 items-center gap-2 shadow-2xl shadow-purple-500/20 active:scale-95">
+                <a href="https://wa.me/905322426012" target="_blank" class="bg-[#7030D0] hover:bg-[#30D67D] text-white px-8 py-3.5 rounded-2xl text-[10px] font-black transition-all hover:scale-105 items-center flex gap-2 shadow-2xl shadow-purple-500/20 active:scale-95">
                     TEKLİF AL <i data-lucide="zap" class="w-4 h-4 fill-current"></i>
                 </a>
-                <button onclick="toggleMenu()" class="relative z-[120] p-3 md:p-4 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 active:scale-90 transition-all">
-                    <i id="menu-icon" data-lucide="menu" class="w-6 h-6"></i>
-                </button>
             </div>
+
+            <!-- Mobil Menü Butonu (Sadece Mobilde) -->
+            <button onclick="toggleMenu()" class="lg:hidden relative z-[120] p-3 bg-white/5 rounded-2xl border border-white/10 hover:bg-white/10 active:scale-90 transition-all">
+                <i id="menu-icon" data-lucide="menu" class="w-6 h-6"></i>
+            </button>
         </div>
     </nav>
 
-    <!-- Overlay Menu -->
+    <!-- Mobil Overlay Menü -->
     <div id="overlay-menu" class="fixed inset-0 z-[105] bg-black/98 backdrop-blur-3xl transition-all duration-700 opacity-0 pointer-events-none translate-y-10 flex flex-col justify-center items-center px-6 text-center">
-        <div class="flex flex-col gap-6 md:gap-12">
-            <button onclick="handleNavigation('home'); toggleMenu();" class="text-4xl md:text-9xl font-black italic tracking-tighter hover:text-[#30D67D] transition-all">ANA SAYFA</button>
-            <button onclick="handleScrollTo('services'); toggleMenu();" class="text-4xl md:text-9xl font-black italic tracking-tighter hover:text-[#30D67D] transition-all">HİZMETLER</button>
-            <button onclick="handleNavigation('blog'); toggleMenu();" class="text-4xl md:text-9xl font-black italic tracking-tighter hover:text-[#30D67D] transition-all">BLOG</button>
-            <button onclick="handleScrollTo('contact'); toggleMenu();" class="text-4xl md:text-9xl font-black italic tracking-tighter hover:text-[#7030D0] transition-all">İLETİŞİM</button>
+        <div class="flex flex-col gap-8">
+            <button onclick="handleNavigation('home'); toggleMenu();" class="text-4xl font-black italic tracking-tighter hover:text-[#30D67D]">ANA SAYFA</button>
+            <button onclick="handleScrollTo('services'); toggleMenu();" class="text-4xl font-black italic tracking-tighter hover:text-[#30D67D]">HİZMETLER</button>
+            <button onclick="handleNavigation('blog'); toggleMenu();" class="text-4xl font-black italic tracking-tighter hover:text-[#30D67D]">BLOG</button>
+            <button onclick="handleScrollTo('contact'); toggleMenu();" class="text-4xl font-black italic tracking-tighter text-[#7030D0]">İLETİŞİM</button>
         </div>
     </div>
 
-    <!-- MAIN VIEWS CONTAINER -->
+    <!-- İÇERİK KONTEYNERI -->
     <div id="view-container" class="view-transition">
-        <!-- Home View -->
+        
+        <!-- Ana Sayfa -->
         <main id="home-view" class="w-full">
-            <section class="relative pt-32 md:pt-48 pb-16 md:pb-32 px-5 md:px-10 max-w-[1600px] mx-auto min-h-[90vh] md:min-h-screen flex flex-col justify-center">
-                <div class="space-y-8 md:space-y-14 w-full text-center xl:text-left">
-                    <div class="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-[#30D67D]/10 border border-[#30D67D]/20 text-[#30D67D] text-[10px] md:text-xs font-black uppercase tracking-[0.3em] animate-pulse mx-auto xl:mx-0">
+            <!-- Hero Alanı -->
+            <section class="relative pt-40 md:pt-64 pb-20 md:pb-40 px-6 max-w-[1400px] mx-auto min-h-screen flex flex-col justify-center">
+                <div class="space-y-10 md:space-y-16 w-full text-center lg:text-left">
+                    <div class="inline-flex items-center gap-3 px-6 py-2.5 rounded-full bg-[#30D67D]/10 border border-[#30D67D]/20 text-[#30D67D] text-[10px] md:text-xs font-black uppercase tracking-[0.3em] animate-pulse mx-auto lg:mx-0">
                         <i data-lucide="sparkles" class="w-4 h-4"></i> ANKARA DİJİTAL GELECEK 2026
                     </div>
-                    <h1 class="text-5xl sm:text-7xl md:text-8xl lg:text-9xl xl:text-[11rem] font-black leading-[1.1] md:leading-[0.85] tracking-tighter">
-                        SİZİN İÇİN <br class="hidden sm:block">
+                    <h1 class="hero-title font-black tracking-tighter leading-none">
+                        SİZİN İÇİN <br class="hidden lg:block">
                         <span class="mui-gradient-text italic">DİJİTALLEŞTİRİYORUZ.</span>
                     </h1>
-                    <div class="flex flex-col lg:flex-row gap-10 md:gap-20 items-center xl:items-start justify-between">
-                        <p class="max-w-2xl text-lg sm:text-xl md:text-3xl text-white/40 font-light leading-relaxed">
-                            Web tasarım, Meta reklamları ve AI optimizasyonlu dijital stratejilerle markanızı yarının dünyasına hazırlıyoruz.
+                    <div class="flex flex-col lg:flex-row gap-10 md:gap-24 items-center lg:items-start justify-between mt-10">
+                        <p class="max-w-2xl text-lg md:text-2xl text-white/40 font-light leading-relaxed">
+                            Web tasarım, Meta reklamları ve AI optimizasyonlu dijital stratejilerle markanızı geleceğe hazırlıyoruz. Estetik ve hızı bir araya getiriyoruz.
                         </p>
-                        <div class="flex flex-col gap-4 w-full sm:w-auto">
-                           <span class="text-5xl md:text-8xl font-black text-white/[0.03] uppercase tracking-tighter leading-none">#Mui2026</span>
-                           <div class="h-1.5 w-full bg-gradient-to-r from-[#7030D0] to-[#30D67D] rounded-full"></div>
+                        <div class="flex flex-col gap-4 w-full md:w-auto">
+                           <span class="text-4xl md:text-6xl font-black text-white/[0.05] uppercase tracking-tighter leading-none">#Mui2026</span>
+                           <div class="h-1.5 w-48 lg:w-full bg-gradient-to-r from-[#7030D0] to-[#30D67D] rounded-full mx-auto lg:mx-0"></div>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <section id="services" class="py-20 md:py-40 px-5 md:px-10 max-w-[1600px] mx-auto">
-                <div class="flex flex-col md:flex-row justify-between items-center md:items-end mb-16 md:mb-32 gap-6">
-                    <div class="space-y-4 text-center md:text-left">
-                        <h2 class="text-4xl md:text-8xl font-black italic tracking-tighter uppercase leading-none">Neler <br class="hidden md:block"><span class="text-[#30D67D]">Yapıyoruz?</span></h2>
-                    </div>
+            <!-- Hizmetler Bento Grid -->
+            <section id="services" class="py-24 md:py-48 px-6 max-w-[1400px] mx-auto">
+                <div class="flex flex-col lg:flex-row justify-between items-center lg:items-end mb-20 md:mb-32 gap-6 text-center lg:text-left">
+                    <h2 class="text-4xl md:text-7xl font-black italic tracking-tighter uppercase leading-none text-white/90">Neler <br class="hidden lg:block"><span class="text-[#30D67D]">Yapıyoruz?</span></h2>
+                    <p class="text-white/30 text-xs md:text-sm tracking-[0.4em] uppercase font-bold">Teknoloji Odaklı Çözümler</p>
                 </div>
-                <div id="services-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-5 md:gap-8 auto-rows-[250px] md:auto-rows-[300px]"></div>
+                <div id="services-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-10"></div>
             </section>
 
-            <section id="contact" class="py-20 md:py-40 px-5 md:px-10 max-w-[1600px] mx-auto text-center">
-                <div class="glass p-10 md:p-32 rounded-[3rem] md:rounded-[6rem] space-y-10 relative overflow-hidden group">
-                   <h2 class="text-5xl md:text-[8rem] font-black italic tracking-tighter leading-none relative z-10">İz Bırakmaya <br> <span class="text-[#30D67D]">Hazır mısınız?</span></h2>
-                   <div class="flex flex-col sm:flex-row gap-6 justify-center relative z-10 pt-10">
-                     <a href="https://wa.me/905322426012" target="_blank" class="px-10 py-6 bg-[#30D67D] text-black rounded-3xl font-black text-xl hover:shadow-[0_0_50px_rgba(48,214,125,0.4)] transition-all active:scale-95">TEKLİF AL</a>
-                     <button onclick="toggleChat(true)" class="px-10 py-6 bg-white/5 border border-white/10 rounded-3xl font-black text-xl hover:bg-white/10 transition-all">MuiBot AI</button>
+            <!-- Fütüristik CTA Alanı -->
+            <section id="contact" class="py-20 md:py-40 px-6 max-w-[1400px] mx-auto">
+                <div class="relative futuristic-card p-12 md:p-32 rounded-[3rem] md:rounded-[5rem] overflow-hidden group">
+                   <!-- Arka Plan Fütüristik Görsel -->
+                   <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center opacity-10 grayscale group-hover:grayscale-0 group-hover:opacity-20 transition-all duration-1000"></div>
+                   <div class="absolute inset-0 bg-gradient-to-t from-black via-transparent to-transparent"></div>
+                   
+                   <div class="relative z-10 text-center space-y-12">
+                       <h2 class="text-4xl md:text-[7rem] font-black italic tracking-tighter leading-none uppercase">İz Bırakmaya <br> <span class="text-[#30D67D]">Hazır mısınız?</span></h2>
+                       <p class="text-white/50 text-lg md:text-2xl max-w-3xl mx-auto font-light">Ankara'dan dünyaya uzanan dijital başarınız için yarının teknolojileriyle bugün tanışın.</p>
+                       <div class="flex flex-col sm:flex-row gap-6 justify-center pt-8">
+                         <a href="https://wa.me/905322426012" target="_blank" class="px-12 py-6 bg-[#30D67D] text-black rounded-3xl font-black text-xl hover:shadow-[0_0_50px_rgba(48,214,125,0.4)] transition-all active:scale-95 flex items-center justify-center gap-3">TEKLİF AL <i data-lucide="arrow-right"></i></a>
+                         <button onclick="toggleChat(true)" class="px-12 py-6 bg-white/5 border border-white/10 rounded-3xl font-black text-xl hover:bg-white/10 transition-all backdrop-blur-md">MuiBot AI</button>
+                       </div>
                    </div>
                 </div>
             </section>
         </main>
 
-        <!-- Service Detail View (Empty, filled by JS) -->
-        <main id="service-detail-view" class="hidden w-full pt-48 pb-32 px-5 md:px-10 max-w-[1400px] mx-auto min-h-screen"></main>
+        <!-- Hizmet Detay Sayfası -->
+        <main id="service-detail-view" class="hidden w-full pt-48 pb-32 px-6 max-w-[1200px] mx-auto min-h-screen"></main>
 
-        <!-- Blog View -->
-        <main id="blog-view" class="hidden w-full pt-48 pb-32 px-5 md:px-10 max-w-[1600px] mx-auto min-h-screen">
-            <h1 class="text-6xl md:text-9xl font-black italic tracking-tighter uppercase mb-20">Mui <span class="text-[#7030D0]">Blog</span></h1>
-            <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-12"></div>
+        <!-- Blog Sayfası -->
+        <main id="blog-view" class="hidden w-full pt-48 pb-32 px-6 max-w-[1400px] mx-auto min-h-screen">
+            <h1 class="text-5xl md:text-8xl font-black italic tracking-tighter uppercase mb-20">Mui <span class="text-[#7030D0]">Blog</span></h1>
+            <div id="blog-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10 md:gap-14"></div>
         </main>
     </div>
 
     <!-- Global Footer -->
-    <footer class="py-20 border-t border-white/5 bg-black/50 pb-safe px-5">
-        <div class="max-w-[1600px] mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div class="space-y-6">
+    <footer class="py-24 border-t border-white/5 bg-black/50 pb-safe px-6">
+        <div class="max-w-[1400px] mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16">
+            <div class="space-y-8">
                 <div class="flex items-center gap-3">
-                    <svg viewBox="0 0 100 80" fill="none" class="w-8 h-8"><path d="M20 70V35C20 23.9543 28.9543 15 40 15V15C51.0457 15 60 23.9543 60 35V70" stroke="#7030D0" stroke-width="15" stroke-linecap="round"/><path d="M60 70V55C60 43.9543 68.9543 35 80 35H80" stroke="#7030D0" stroke-width="15" stroke-linecap="round"/><circle cx="90" cy="65" r="10" fill="#30D67D" /></svg>
-                    <span class="font-black text-xl tracking-tighter">MUI MEDYA</span>
+                    <svg viewBox="0 0 120 100" fill="none" class="w-8 h-8">
+                        <path d="M15 75V40C15 28.9543 23.9543 20 35 20V20C46.0457 20 55 28.9543 55 40V75" stroke="#7030D0" stroke-width="14" stroke-linecap="round"/>
+                        <path d="M55 75V55C55 43.9543 63.9543 35 75 35H75" stroke="#7030D0" stroke-width="14" stroke-linecap="round"/>
+                        <circle cx="95" cy="70" r="12" fill="#30D67D" />
+                    </svg>
+                    <span class="font-black text-2xl tracking-tighter uppercase">MUI MEDYA</span>
                 </div>
-                <p class="text-white/30 text-xs tracking-widest uppercase">Ankara / Çankaya</p>
+                <p class="text-white/30 text-xs md:text-sm tracking-widest leading-loose uppercase font-bold">Prof. Dr. Ahmet Taner Kışlalı Mah. <br> 2902. Cad. No: 7, Çankaya/Ankara</p>
             </div>
-            <div class="space-y-4">
-                <h4 class="text-[#30D67D] font-black text-[10px] uppercase tracking-widest">HİZMETLER</h4>
-                <div id="footer-services-list" class="flex flex-col gap-2 text-sm text-white/40"></div>
+            <div class="space-y-6">
+                <h4 class="text-[#30D67D] font-black text-[10px] uppercase tracking-[0.4em]">HİZMETLER</h4>
+                <div id="footer-services-list" class="flex flex-col gap-3 text-xs md:text-sm text-white/40 font-medium"></div>
             </div>
-            <div class="space-y-4">
-                <h4 class="text-[#7030D0] font-black text-[10px] uppercase tracking-widest">İLETİŞİM</h4>
-                <div class="text-sm text-white/40">info@muimedya.com<br>0312 684 80 00</div>
+            <div class="space-y-6">
+                <h4 class="text-[#7030D0] font-black text-[10px] uppercase tracking-[0.4em]">İLETİŞİM</h4>
+                <div class="text-sm text-white/50 font-bold space-y-2">
+                    <p>info@muimedya.com</p>
+                    <p>0312 684 80 00</p>
+                </div>
             </div>
-            <div class="text-[10px] font-black text-white/10 uppercase tracking-[0.3em] flex items-end md:justify-end">© 2026 MUI MEDYA</div>
+            <div class="flex flex-col justify-between items-start lg:items-end">
+                <div class="flex gap-6 text-white/20">
+                    <i data-lucide="instagram" class="hover:text-white transition-colors cursor-pointer"></i>
+                    <i data-lucide="linkedin" class="hover:text-white transition-colors cursor-pointer"></i>
+                </div>
+                <div class="text-[10px] font-black text-white/10 uppercase tracking-[0.3em] mt-10 lg:mt-0">© 2026 MUI MEDYA</div>
+            </div>
         </div>
     </footer>
 
-    <!-- MuiBot AI UI -->
+    <!-- MuiBot AI Asistan -->
     <div id="chat-container" class="fixed bottom-6 right-6 md:bottom-12 md:right-12 z-[150] transition-all duration-500 w-16 h-16">
-        <button id="chat-toggle" onclick="toggleChat()" class="w-full h-full bg-[#7030D0] rounded-[2rem] flex items-center justify-center shadow-3xl hover:scale-110 active:scale-90 transition-transform relative group">
+        <button id="chat-toggle" onclick="toggleChat()" class="w-full h-full bg-[#7030D0] rounded-[1.8rem] flex items-center justify-center shadow-3xl hover:scale-110 active:scale-90 transition-transform relative group border border-white/10">
             <i id="bot-icon" data-lucide="bot" class="w-8 h-8 text-white group-hover:rotate-12 transition-transform"></i>
             <div class="absolute -top-1 -right-1 w-4 h-4 bg-[#30D67D] rounded-full animate-ping"></div>
         </button>
 
-        <div id="chat-window" class="hidden absolute bottom-0 right-0 glass rounded-[2.5rem] shadow-3xl flex flex-col overflow-hidden w-[calc(100vw-3rem)] md:w-[450px] h-[75vh] md:h-[650px] border border-white/10">
+        <div id="chat-window" class="hidden absolute bottom-0 right-0 glass rounded-[2.5rem] shadow-3xl flex flex-col overflow-hidden w-[calc(100vw-3rem)] md:w-[420px] h-[75vh] md:h-[600px] border border-white/10">
             <div class="p-6 md:p-8 bg-white/5 border-b border-white/5 flex justify-between items-center">
                 <div class="flex items-center gap-4">
                     <div class="w-10 h-10 bg-gradient-to-br from-[#7030D0] to-purple-400 rounded-2xl flex items-center justify-center text-white"><i data-lucide="bot" class="w-5 h-5"></i></div>
-                    <div><h4 class="font-black text-sm uppercase">MuiBot AI</h4><span class="text-[9px] text-[#30D67D] font-bold">EXPERTS</span></div>
+                    <div><h4 class="font-black text-sm uppercase tracking-tight">MuiBot AI</h4><span class="text-[9px] text-[#30D67D] font-bold tracking-widest">DİJİTAL DANIŞMAN</span></div>
                 </div>
                 <button onclick="toggleChat(false)" class="text-white/20 hover:text-white p-2 transition-colors"><i data-lucide="x" class="w-6 h-6"></i></button>
             </div>
-            <div id="chat-messages" class="flex-1 p-6 md:p-8 overflow-y-auto space-y-6 scroll-smooth custom-scrollbar"></div>
+            <div id="chat-messages" class="flex-1 p-6 md:p-8 overflow-y-auto space-y-6 scroll-smooth custom-scrollbar text-white/80"></div>
             <div id="typing-indicator" class="hidden px-8 py-4 flex items-center gap-2 text-white/20 text-xs italic">MuiBot düşünüyor <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span></div>
             <div class="p-6 md:p-8 bg-black/40 border-t border-white/5 space-y-4">
                 <div class="flex items-center gap-3">
-                    <input id="chat-input" type="text" placeholder="Geleceği sorun..." class="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-[#7030D0]">
-                    <button onclick="sendUserMessage()" class="p-4 bg-[#7030D0] text-white rounded-2xl hover:bg-[#30D67D]"><i data-lucide="send" class="w-5 h-5"></i></button>
+                    <input id="chat-input" type="text" placeholder="Geleceği sorun..." class="flex-1 bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-[#7030D0] placeholder:text-white/20">
+                    <button onclick="sendUserMessage()" class="p-4 bg-[#7030D0] text-white rounded-2xl hover:bg-[#30D67D] transition-all"><i data-lucide="send" class="w-5 h-5"></i></button>
                 </div>
-                <a href="https://wa.me/905322426012" target="_blank" class="w-full bg-[#30D67D] text-black py-4 rounded-2xl font-black text-xs flex items-center justify-center gap-3 uppercase tracking-widest shadow-xl shadow-[#30D67D]/10">WHATSAPP <i data-lucide="message-square" class="w-5 h-5"></i></a>
+                <a href="https://wa.me/905322426012" target="_blank" class="w-full bg-[#30D67D] text-black py-4 rounded-2xl font-black text-xs flex items-center justify-center gap-3 uppercase tracking-widest shadow-xl shadow-[#30D67D]/10 active:scale-95 transition-all">WHATSAPP <i data-lucide="message-square" class="w-5 h-5"></i></a>
             </div>
         </div>
     </div>
@@ -213,7 +258,7 @@
 
     <script>
         const apiKey = "";
-        const systemPrompt = "Sen MuiBot AI'sın. Ankara merkezli Mui Medya'nın yapay zeka danışmanısın. Hizmetlerimiz: Web Tasarım, SEO, Meta Reklamları, NFC Kartvizit, E-Ticaret ve Prodüksiyon. Kurallar: Profesyonel, gelecekçi ve yardımsever ol. Her zaman WhatsApp hattına yönlendir. Türkçe konuş.";
+        const systemPrompt = "Sen MuiBot AI'sın. Ankara merkezli Mui Medya'nın yapay zeka danışmanısın. Hizmetlerimiz: Web Tasarım, SEO, Meta Reklamları, NFC Kartvizit, E-Ticaret ve Prodüksiyon. Profesyonel, fütüristik ve yardımsever ol.";
 
         const SERVICES = {
             "web-tasarim": {
@@ -221,73 +266,66 @@
                 id: "web-tasarim",
                 icon: "layout",
                 color: "from-[#7030D0]/30",
-                span: "md:col-span-4",
                 shortDesc: "Mekansal arayüzler ve 2026 UX vizyonuyla kurumsal dijital kimliğiniz.",
-                fullDesc: "Mui Medya olarak, web tasarımını sadece kod ve görsellerden ibaret görmüyoruz. 2026 vizyonumuzla, markanızın dijital dünyadaki 'fiziksel' varlığını inşa ediyoruz. Mekansal kullanıcı arayüzleri, akışkan tipografi ve mikro etkileşimlerle ziyaretçilerinize unutulmaz bir deneyim sunuyoruz.",
-                features: ["Mekansal (Spatial) UI", "0.8s Altı Açılış Hızı", "AI Destekli Kişiselleştirme", "UX Optimizasyonu"],
-                tech: ["Next.js 15", "Three.js", "Framer Motion", "OLED Dark Mode"]
+                fullDesc: "Markanızın dijital varlığını 2026 vizyonuyla inşa ediyoruz. Sadece bir site değil, kullanıcıların içinde yaşayacağı bir deneyim tasarlıyoruz.",
+                features: ["Süper Hızlı Altyapı", "Fütüristik Tasarım", "AI Entegrasyonu", "UX Analitiği"],
+                tech: ["Next.js 15", "Three.js", "Framer Motion", "Tailwind 4"]
             },
             "seo": {
                 title: "SEO v2.0",
                 id: "seo",
                 icon: "search",
                 color: "from-[#30D67D]/30",
-                span: "md:col-span-2",
                 shortDesc: "Arama motorlarından AI yanıt motorlarına kadar tam optimizasyon.",
-                fullDesc: "Geleneksel SEO artık yeterli değil. Perplexity, SearchGPT ve Gemini gibi AI motorlarında markanızın 'referans' gösterilmesi için yeni nesil AIO (AI Optimization) stratejileri uyguluyoruz. Ankara'da lokal güçten küresel görünürlüğe giden yolu biz inşa ediyoruz.",
-                features: ["AIO (AI Engine Optimization)", "Semantik İçerik Mimarisi", "Lokal GEO Hedefleme", "Teknik SEO Denetimi"],
-                tech: ["Structured Data", "Lighthouse 100", "Semantic Graph", "Entity SEO"]
+                fullDesc: "Google ve AI motorlarında görünür olmanızı sağlıyoruz. Lokal ve küresel SEO stratejileriyle pazar payınızı artırıyoruz.",
+                features: ["AI SEO (AIO)", "Lokal SEO", "İçerik Stratejisi", "Teknik Denetim"],
+                tech: ["Schema.org", "GA4", "Search Console", "Semrush"]
             },
             "nfc-kart": {
                 title: "NFC Kartvizit",
                 id: "nfc-kart",
                 icon: "smartphone",
                 color: "from-[#7030D0]/30",
-                span: "md:col-span-2",
                 shortDesc: "Network kurmanın en teknolojik yolu. QR ve NFC entegreli.",
-                fullDesc: "Kağıt kartvizitlerin devri kapandı. Mui Medya'nın NFC ve QR entegreli dijital kartvizit çözümleriyle, tek bir dokunuşla tüm bilgilerinizi müşterilerinizin telefonuna aktarın. Çevre dostu, güncellenebilir ve prestijli.",
-                features: ["Sınırsız Güncelleme", "Analiz & Takip", "Uygulama Gerektirmez", "Şık Tasarım Options"],
-                tech: ["NFC 215 Chip", "QR Code Engine", "PWA Support", "Cloud Sync"]
+                fullDesc: "Fiziksel networkünüzü dijital hızla birleştirin. Tek dokunuşla tüm bilgilerinizi paylaşın.",
+                features: ["Sınırsız Kullanım", "Hızlı Paylaşım", "Özel Profil", "Analizler"],
+                tech: ["NFC Chip", "Dynamic QR", "PWA", "Sync Engine"]
             },
             "reklam": {
                 title: "Dijital Reklam",
                 id: "reklam",
                 icon: "zap",
                 color: "from-[#30D67D]/30",
-                span: "md:col-span-4",
                 shortDesc: "Meta ve Google Ads'te yapay zeka destekli maksimum dönüşüm.",
-                fullDesc: "Bütçenizi harcamıyor, yönetiyoruz. Meta (Instagram/Facebook) ve Google Ads platformlarında AI tabanlı hedefleme algoritmalarımızla en doğru kitleye, en düşük maliyetle ulaşıyoruz. Dönüşüm odaklı (ROI) stratejilerle satışlarınızı katlıyoruz.",
-                features: ["AI Hedefleme", "A/B Kreatif Testleri", "Dönüşüm Takibi", "Pazar Fizibilitesi"],
-                tech: ["Meta CAPI", "Google GA4", "Lookalike Audience", "Dynamic Creative"]
+                fullDesc: "Reklam bütçenizi maksimum verimle yönetiyoruz. AI tabanlı hedeflemelerle satışlarınızı artırıyoruz.",
+                features: ["Düşük Maliyet", "Yüksek Dönüşüm", "AI Hedefleme", "Kreatif Destek"],
+                tech: ["Meta Business", "Google Ads", "Conversion API", "Lookalike"]
             },
             "e-ticaret": {
                 title: "E-Ticaret",
                 id: "e-ticaret",
                 icon: "shopping-cart",
                 color: "from-[#7030D0]/30",
-                span: "md:col-span-3",
                 shortDesc: "Hızlı, güvenli ve ölçeklenebilir online mağaza altyapıları.",
-                fullDesc: "Global pazarda yerinizi alın. Kullanıcı dostu sepet deneyimi, güvenli ödeme sistemleri ve tam entegre lojistik çözümleriyle e-ticaret sitenizi bir satış makinesine dönüştürüyoruz.",
-                features: ["Tek Tıkla Ödeme", "Mobil App Akıcılığı", "Stok Yönetimi", "Global Satış Desteği"],
-                tech: ["Headless Commerce", "Stripe/Iyzico", "Algolia Search", "Redis Cache"]
+                fullDesc: "E-ticaret sitenizi bir satış makinesine dönüştürelim. Güvenli ve hızlı altyapılar sunuyoruz.",
+                features: ["Güvenli Ödeme", "Mobil App Akıcılığı", "Stok Kontrolü", "Kullanıcı Dostu"],
+                tech: ["Shopify", "WooCommerce", "PayTR", "Iyzico"]
             },
             "produksiyon": {
                 title: "Prodüksiyon",
                 id: "produksiyon",
                 icon: "video",
                 color: "from-[#30D67D]/30",
-                span: "md:col-span-3",
                 shortDesc: "Markanızın hikayesini en kaliteli görsellerle anlatıyoruz.",
-                fullDesc: "Görsel hafıza en güçlüsüdür. Profesyonel ekipmanlarımız ve yaratıcı kurgu ekibimizle; tanıtım filmleri, sosyal medya içerikleri ve ürün çekimlerinde markanızın kalitesini ekranlara yansıtıyoruz.",
-                features: ["4K Havadan Çekim", "Sinematik Kurgu", "Storytelling", "Kurumsal Fotoğraf"],
-                tech: ["Cinema 4D", "After Effects", "Sony A-Series", "DaVinci Resolve"]
+                fullDesc: "Görsel hafıza en güçlüsüdür. Profesyonel ekipmanlarla markanızı dijitalde canlandırıyoruz.",
+                features: ["4K Çekim", "Sinematik Kurgu", "Storytelling", "Profesyonel Ses"],
+                tech: ["Cinema 4D", "Sony A7SIII", "DaVinci Resolve", "DJI Air"]
             }
         };
 
         const BLOG_POSTS = [
-            { id: 1, title: "AI Arama Motorları (GEO) ve SEO", category: "AI & Tech", read: "7 dk", img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80", exc: "Perplexity ve SearchGPT gibi platformlarda görünür olma stratejileri." },
-            { id: 2, title: "Meta Reklamları 2026 Trendleri", category: "Ads", read: "10 dk", img: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=80", exc: "AI tabanlı hedefleme ve çerezsiz reklamcılık döneminde başarı." },
-            { id: 3, title: "Dijital Medyada Doğru Fizibilite Analizi", category: "Business", read: "6 dk", img: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80", exc: "Pazar doygunluğunu ölçerek doğru dijital yatırımın şifreleri." }
+            { id: 1, title: "AI Arama Motorları ve SEO", category: "Teknoloji", read: "5 dk", img: "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=800&q=80", exc: "Geleceğin arama motorlarında markanızı nasıl konumlandırırız?" },
+            { id: 2, title: "Meta Reklamları 2026", category: "Pazarlama", read: "8 dk", img: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?auto=format&fit=crop&w=800&q=80", exc: "Gizlilik odaklı reklamlarda başarı stratejileri." }
         ];
 
         function interactionFeedback(vibrate = true, sound = "click") {
@@ -311,26 +349,26 @@
 
             window.addEventListener('scroll', () => {
                 const nav = document.getElementById('navbar');
-                if (window.scrollY > 50) nav.classList.add('bg-black/90', 'backdrop-blur-xl', 'py-4', 'border-b', 'border-white/10');
-                else nav.classList.remove('bg-black/90', 'backdrop-blur-xl', 'py-4', 'border-b', 'border-white/10');
+                if (window.scrollY > 50) nav.classList.add('bg-black/95', 'backdrop-blur-xl', 'py-4', 'border-b', 'border-white/10');
+                else nav.classList.remove('bg-black/95', 'backdrop-blur-xl', 'py-4', 'border-b', 'border-white/10');
             });
 
             document.getElementById('chat-input').addEventListener('keypress', (e) => { if (e.key === 'Enter') sendUserMessage(); });
-            append('bot', "Merhaba! Ben MuiBot AI. 2026 dijital vizyonumuzla markanızı nasıl zirveye taşıyabileceğimizi keşfedelim mi?");
+            append('bot', "Merhaba! Ben MuiBot AI. Ankara Çankaya'daki ofisimizden size nasıl yardımcı olabilirim?");
         };
 
         function renderServices() {
             const container = document.getElementById('services-grid');
             container.innerHTML = Object.values(SERVICES).map(s => `
-                <div onclick="handleNavigation('service-${s.id}')" class="${s.span} group relative p-10 rounded-[3rem] bg-white/[0.03] border border-white/5 hover:border-[#7030D0]/30 transition-all hover:bg-white/[0.06] cursor-pointer overflow-hidden">
+                <div onclick="handleNavigation('service-${s.id}')" class="group relative p-10 rounded-[2.5rem] bg-white/[0.03] border border-white/5 hover:border-[#7030D0]/30 transition-all hover:bg-white/[0.06] cursor-pointer overflow-hidden min-h-[300px] flex flex-col justify-between">
                     <div class="absolute inset-0 bg-gradient-to-br ${s.color} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
                     <div class="relative z-10 flex flex-col h-full justify-between gap-10">
-                        <div class="w-16 h-16 rounded-[1.5rem] bg-black/50 flex items-center justify-center text-[#30D67D] group-hover:scale-110 transition-all">
-                            <i data-lucide="${s.icon}" class="w-8 h-8"></i>
+                        <div class="w-14 h-14 rounded-[1.2rem] bg-black/50 flex items-center justify-center text-[#30D67D] group-hover:scale-110 transition-all border border-white/10">
+                            <i data-lucide="${s.icon}" class="w-6 h-6"></i>
                         </div>
                         <div>
-                            <h3 class="text-2xl font-black italic uppercase">${s.title}</h3>
-                            <p class="text-sm text-white/30 leading-relaxed font-light line-clamp-2">${s.shortDesc}</p>
+                            <h3 class="text-xl font-black italic uppercase text-white/90 group-hover:text-white tracking-tight">${s.title}</h3>
+                            <p class="text-xs text-white/30 leading-relaxed font-light mt-2 line-clamp-2">${s.shortDesc}</p>
                         </div>
                     </div>
                 </div>
@@ -341,22 +379,19 @@
         function renderFooterServices() {
             const container = document.getElementById('footer-services-list');
             container.innerHTML = Object.values(SERVICES).map(s => `
-                <button onclick="handleNavigation('service-${s.id}')" class="text-left hover:text-white transition-colors">${s.title}</button>
+                <button onclick="handleNavigation('service-${s.id}')" class="text-left hover:text-white transition-colors uppercase tracking-widest text-[10px] font-bold">${s.title}</button>
             `).join('');
         }
 
         function renderBlogs() {
             const container = document.getElementById('blog-grid');
             container.innerHTML = BLOG_POSTS.map(post => `
-                <article onclick="interactionFeedback()" class="group flex flex-col bg-white/[0.02] border border-white/5 rounded-[3rem] overflow-hidden hover:border-[#30D67D]/40 transition-all cursor-pointer">
+                <article onclick="interactionFeedback()" class="group bg-white/[0.02] border border-white/5 rounded-[2.5rem] overflow-hidden hover:border-[#30D67D]/40 transition-all cursor-pointer">
                     <div class="aspect-[16/9] overflow-hidden"><img src="${post.img}" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"></div>
-                    <div class="p-10 space-y-6 flex-1 flex flex-col">
-                        <div class="flex justify-between items-center text-[10px] font-black uppercase tracking-widest text-[#30D67D]">
-                            <span>${post.category}</span>
-                            <span class="flex items-center gap-2 text-white/20"><i data-lucide="clock" class="w-4 h-4"></i> ${post.read}</span>
-                        </div>
-                        <h3 class="text-2xl font-black italic tracking-tighter leading-tight">${post.title}</h3>
-                        <p class="text-sm text-white/40 line-clamp-3 font-light leading-relaxed">${post.exc}</p>
+                    <div class="p-8 space-y-4">
+                        <span class="text-[10px] font-black uppercase text-[#30D67D]">${post.category}</span>
+                        <h3 class="text-xl font-black italic tracking-tighter leading-tight">${post.title}</h3>
+                        <p class="text-xs text-white/40 leading-relaxed">${post.exc}</p>
                     </div>
                 </article>
             `).join('');
@@ -367,13 +402,10 @@
             interactionFeedback();
             const container = document.getElementById('view-container');
             container.classList.remove('view-transition');
-            void container.offsetWidth; // Trigger reflow
+            void container.offsetWidth; 
             container.classList.add('view-transition');
 
-            const h = document.getElementById('home-view');
-            const b = document.getElementById('blog-view');
-            const d = document.getElementById('service-detail-view');
-
+            const h = document.getElementById('home-view'), b = document.getElementById('blog-view'), d = document.getElementById('service-detail-view');
             [h, b, d].forEach(el => el.classList.add('hidden'));
 
             if (v === 'home') h.classList.remove('hidden');
@@ -390,26 +422,16 @@
             const s = SERVICES[id];
             const d = document.getElementById('service-detail-view');
             d.innerHTML = `
-                <div class="space-y-20">
-                    <button onclick="handleNavigation('home')" class="flex items-center gap-2 text-[#7030D0] font-black uppercase tracking-widest text-xs hover:text-[#30D67D] transition-colors">
-                        <i data-lucide="arrow-left" class="w-4 h-4"></i> GERİ DÖN
-                    </button>
-                    <div class="grid lg:grid-cols-2 gap-20 items-center">
-                        <div class="space-y-10">
-                            <h1 class="text-6xl md:text-8xl font-black italic uppercase leading-none tracking-tighter">${s.title.split(' ')[0]} <br> <span class="text-[#30D67D]">${s.title.split(' ')[1] || ''}</span></h1>
-                            <p class="text-xl md:text-3xl text-white/50 font-light leading-relaxed">${s.fullDesc}</p>
-                            <div class="flex gap-4">
-                                <a href="https://wa.me/905322426012" target="_blank" class="px-10 py-5 bg-[#7030D0] text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-purple-500/10">BİLGİ AL</a>
-                            </div>
+                <div class="space-y-16">
+                    <button onclick="handleNavigation('home')" class="flex items-center gap-2 text-[#7030D0] font-black uppercase tracking-widest text-xs hover:text-[#30D67D] transition-all"><i data-lucide="arrow-left" class="w-4 h-4"></i> GERİ DÖN</button>
+                    <div class="grid lg:grid-cols-2 gap-16 items-center">
+                        <div class="space-y-8">
+                            <h1 class="text-5xl md:text-7xl font-black italic uppercase leading-none tracking-tighter">${s.title}</h1>
+                            <p class="text-xl text-white/50 font-light leading-relaxed">${s.fullDesc}</p>
+                            <a href="https://wa.me/905322426012" target="_blank" class="inline-block px-10 py-5 bg-[#7030D0] text-white rounded-2xl font-black uppercase tracking-widest text-xs shadow-xl shadow-purple-500/10">BİLGİ AL</a>
                         </div>
                         <div class="grid grid-cols-2 gap-4">
-                            ${s.features.map(f => `<div class="p-8 rounded-[2rem] glass flex flex-col justify-center items-center text-center gap-4"><i data-lucide="check-circle-2" class="text-[#30D67D]"></i><span class="text-sm font-bold uppercase tracking-widest">${f}</span></div>`).join('')}
-                        </div>
-                    </div>
-                    <div class="py-20 border-y border-white/5">
-                        <h4 class="text-white/20 font-black uppercase tracking-[0.5em] text-center mb-16 text-xs">KULLANDIĞIMIZ TEKNOLOJİLER</h4>
-                        <div class="flex flex-wrap justify-center gap-10 md:gap-20">
-                            ${s.tech.map(t => `<span class="text-2xl md:text-4xl font-black text-white/10 uppercase italic hover:text-white transition-colors cursor-default">${t}</span>`).join('')}
+                            ${s.features.map(f => `<div class="p-6 rounded-[2rem] glass flex flex-col items-center text-center gap-3"><i data-lucide="check-circle-2" class="text-[#30D67D]"></i><span class="text-[10px] font-bold uppercase tracking-widest">${f}</span></div>`).join('')}
                         </div>
                     </div>
                 </div>
@@ -426,8 +448,8 @@
         function toggleMenu() {
             interactionFeedback(true, menuOpen ? "click" : "pop"); menuOpen = !menuOpen;
             const m = document.getElementById('overlay-menu'), i = document.getElementById('menu-icon');
-            if (menuOpen) { m.classList.replace('opacity-0', 'opacity-100'); m.classList.replace('pointer-events-none', 'pointer-events-auto'); m.classList.replace('translate-y-10', 'translate-y-0'); i.setAttribute('data-lucide', 'x'); document.body.style.overflow = 'hidden'; }
-            else { m.classList.replace('opacity-100', 'opacity-0'); m.classList.replace('pointer-events-auto', 'pointer-events-none'); m.classList.replace('translate-y-0', 'translate-y-10'); i.setAttribute('data-lucide', 'menu'); document.body.style.overflow = 'auto'; }
+            if (menuOpen) { m.classList.replace('opacity-0', 'opacity-100'); m.classList.replace('pointer-events-none', 'pointer-events-auto'); m.classList.replace('translate-y-10', 'translate-y-0'); i.setAttribute('data-lucide', 'x'); }
+            else { m.classList.replace('opacity-100', 'opacity-0'); m.classList.replace('pointer-events-auto', 'pointer-events-none'); m.classList.replace('translate-y-0', 'translate-y-10'); i.setAttribute('data-lucide', 'menu'); }
             lucide.createIcons();
         }
 
@@ -442,26 +464,22 @@
 
         async function fetchAI(t) {
             document.getElementById('typing-indicator').classList.remove('hidden');
-            let r = 0; while (r < 5) {
-                try {
-                    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
-                        method: 'POST', headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ contents: [{ parts: [{ text: t }] }], systemInstruction: { parts: [{ text: systemPrompt }] } })
-                    });
-                    const d = await res.json();
-                    document.getElementById('typing-indicator').classList.add('hidden');
-                    return d.candidates?.[0]?.content?.parts?.[0]?.text || "Yanıt alamadım.";
-                } catch (e) { r++; await new Promise(s => setTimeout(s, Math.pow(2, r) * 1000)); }
-            }
-            document.getElementById('typing-indicator').classList.add('hidden');
-            return "WhatsApp hattımızdan bize ulaşabilirsiniz.";
+            try {
+                const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ contents: [{ parts: [{ text: t }] }], systemInstruction: { parts: [{ text: systemPrompt }] } })
+                });
+                const d = await res.json();
+                document.getElementById('typing-indicator').classList.add('hidden');
+                return d.candidates?.[0]?.content?.parts?.[0]?.text || "Şu an cevap veremiyorum.";
+            } catch (e) { document.getElementById('typing-indicator').classList.add('hidden'); return "Hata oluştu."; }
         }
 
         function append(role, text) {
             const c = document.getElementById('chat-messages');
             const d = document.createElement('div');
             d.className = `flex ${role === 'user' ? 'justify-end' : 'justify-start'}`;
-            d.innerHTML = `<div class="max-w-[85%] p-5 rounded-3xl text-sm glass border-white/10 ${role === 'user' ? 'bg-[#7030D0] chat-bubble-user text-white' : 'chat-bubble-bot text-white/80'}">${text}</div>`;
+            d.innerHTML = `<div class="max-w-[85%] p-5 rounded-3xl text-sm glass border-white/10 ${role === 'user' ? 'bg-[#7030D0] text-white' : 'text-white/80'}">${text}</div>`;
             c.appendChild(d); c.scrollTop = c.scrollHeight;
         }
 
@@ -469,13 +487,6 @@
             const i = document.getElementById('chat-input'), t = i.value.trim(); if (!t) return;
             interactionFeedback(); append('user', t); i.value = '';
             const res = await fetchAI(t); append('bot', res); interactionFeedback(false, "pop");
-        }
-
-        async function botReply(s) {
-            interactionFeedback(); append('user', `${s} hakkında bilgi.`);
-            if (!chatOpen) toggleChat(true);
-            const res = await fetchAI(`${s} hizmetiniz hakkında 2026 vizyonuyla bilgi ver.`);
-            append('bot', res); interactionFeedback(false, "pop");
         }
     </script>
 </body>
